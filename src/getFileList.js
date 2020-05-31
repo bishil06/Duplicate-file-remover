@@ -17,9 +17,9 @@ const fsPromises = fs.promises;
 
   알고리즘 순서
   입력받은 경로 가 폴더이고 접근가능한 폴더인지 검사
-  
+  폴더에서 파일을 하나씩 꺼내고 파일객체(dirent)에 경로와 size를 추가해서 배열에 추가한다.
+  만들어진 파일리스트(배열)를 반환한다.
 */
-
 async function getFileList(directory, r) {
   const isRableDir = await isReadableDir(directory);
 
