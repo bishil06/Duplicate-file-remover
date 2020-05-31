@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/bishil06/Duplicate-file-remover/issues"
   },
-  "homepage": "https://github.com/bishil06/Duplicate-file-remover#readme"
+  "homepage": "https://github.com/bishil06/Duplicate-file-remover#readme",
+  "dependencies": {
+    "crypto": "^1.0.1"
+  }
 }
