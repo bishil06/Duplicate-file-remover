@@ -21,7 +21,8 @@ function getMD(dirent) {
     });
 
     input.on('close', () => {
-      res(hash.digest('hex'));
+      dirent.hash = hash.digest('hex');
+      res(dirent);
     });
   });
 }
