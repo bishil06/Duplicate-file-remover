@@ -1,0 +1,19 @@
+{
+  "name": "duplicate_file_remover",
+  "version": "1.0.0",
+  "description": "Duplicate file remover",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bishil06/Duplicate-file-remover.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bishil06/Duplicate-file-remover/issues"
+  },
+  "homepage": "https://github.com/bishil06/Duplicate-file-remover#readme"
+}
