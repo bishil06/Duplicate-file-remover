@@ -21,8 +21,45 @@ const fsPromises = fs.promises;
 */
 
 async function getFileList(directory, r) {
-  let result = [];
+  const isRableDir = await isReadableDir(directory);
 
+  let dirObj = null; // Class fs.Dir
+  if (isRableDir) {
+    dirObj = await fsPromises
+      .opendir(directory)
+      .then((dir) => {
+        return dir;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  } else {
+    return null; // 함수 종료
+  }
+
+  let result = [];
+  if (dirObj instanceof fs.Dir) {
+    for await (const dirent of dirObj) {
+      if (dirent.isDirectory()) {
+        if (r) {
+          // 하위 폴더까지 검사할경우만 실행
+          rpath = path.join(directory, dirent.name);
+          const rarray = await getFileList(rpath, r);
+          result = result.concat(rarray);
+        }
+      } else {
+        result.push(await addPathAndSizeToDirent(dirent, directory));
+      }
+    }
+  } else {
+    console.log('폴더를 여는데 실패했습니다.');
+    return null;
+  }
+
+  return result;
+}
+
+async function isReadableDir(directory) {
   const isDir = await fsPromises
     .stat(directory)
     // lstat 은 심볼릭링크의 경우 심볼릭링크 자체의 파일타입을 가져오지만
@@ -51,33 +88,7 @@ async function getFileList(directory, r) {
     return null; // 함수 종료
   }
 
-  let dirObj = null; // Class fs.Dir
-  if (readableDir) {
-    await fsPromises
-      .opendir(directory)
-      .then((dir) => {
-        dirObj = dir;
-      })
-      .catch((err) => console.log(err));
-  } else {
-    console.log('이 폴더를 읽을수 없습니다.');
-    return null; // 함수 종료
-  }
-
-  for await (const dirent of dirObj) {
-    if (dirent.isDirectory()) {
-      if (r) {
-        // 하위 폴더까지 검사할경우만 실행
-        rpath = path.join(directory, dirent.name);
-        const rarray = await getFileList(rpath, r);
-        result = result.concat(rarray);
-      }
-    } else {
-      result.push(await addPathAndSizeToDirent(dirent, directory));
-    }
-  }
-
-  return result;
+  return isReadableDir;
 }
 
 async function addPathAndSizeToDirent(dirent, dir) {
