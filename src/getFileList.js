@@ -2,6 +2,8 @@ const path = require('path');
 const fs = require('fs');
 const fsPromises = fs.promises;
 
+const { isReadableDir } = require('./isReadable');
+
 /*
   함수명
   getFileList
@@ -57,38 +59,6 @@ async function getFileList(directory, r) {
   }
 
   return result;
-}
-
-async function isReadableDir(directory) {
-  const isDir = await fsPromises
-    .stat(directory)
-    // lstat 은 심볼릭링크의 경우 심볼릭링크 자체의 파일타입을 가져오지만
-    // stat은 심볼릭링크가 가리키는 파일의 타입을 가져온다.
-    .then((stat) => {
-      return stat.isDirectory();
-    })
-    .catch((err) => {
-      console.log(err);
-      return false;
-    });
-
-  let readableDir = null;
-  if (isDir) {
-    readableDir = await fsPromises
-      .access(directory, fs.constants.R_OK)
-      .then(() => {
-        return true;
-      })
-      .catch((err) => {
-        console.log(err);
-        return false;
-      });
-  } else {
-    console.log('해당 경로를 찾지 못하거나 폴더가 아닙니다.');
-    return null; // 함수 종료
-  }
-
-  return isReadableDir;
 }
 
 async function addPathAndSizeToDirent(dirent, dir) {
